@@ -35,5 +35,7 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/docker-aws-project
             docker stop docker-container || true
             docker rm docker-container || true
+            docker ps -q | xargs -r docker stop
+            docker ps -aq | xargs -r docker rm
             docker run -d -p 80:80 --name docker-container ${{ secrets.DOCKER_USERNAME }}/docker-aws-project
           EOF
