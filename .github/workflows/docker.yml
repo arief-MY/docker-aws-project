@@ -1,14 +1,11 @@
 name: Docker CI/CD
-
 on:
   push:
     branches:
       - main
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,13 +22,13 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/docker-aws-project
 
-      - uses: appleboy/ssh-action@v1.0.3
-  with:
-    host: ${{ secrets.EC2_HOST }}
-    username: ${{ secrets.EC2_USERNAME }}
-    key: ${{ secrets.EC2_SSH_KEY }}
-    port: 22
-    debug: true   # 👈 add this
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/docker-aws-project
             docker stop docker-container || true
