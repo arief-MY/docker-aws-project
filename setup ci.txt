@@ -1,0 +1,57 @@
+use GitHub
+
+connectkan project kite ngan repo git
+git init
+git remote add origin https://github.com/username/my-repo.git
+git add .
+git commit -m "letak nama as indicator tgh buat ape"
+git push -u origin main
+
+create workflow dalam actions
+.GitHub/workflow/docker.yml
+
+create secret dekat setting masukkan DOCKER_USERNAME DOCKER_PASSWORD EC2_USER(ec2 punye os machine) EC2_HOST(ec2 punya ip) EC2_SSH_KEY(.pem file)
+
+contoh ci cd punye yml
+
+name: Docker CI/CD
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/docker-aws-project .
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/docker-aws-project
+
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            docker pull ${{ secrets.DOCKER_USERNAME }}/docker-aws-project
+            docker stop docker-container || true
+            docker rm docker-container || true
+            docker ps -q | xargs -r docker stop
+            docker ps -aq | xargs -r docker rm
+            docker run -d -p 80:80 --name docker-container ${{ secrets.DOCKER_USERNAME }}/docker-aws-project
+          EOF

@@ -1,0 +1,19 @@
+create dockerfile inside the project 
+
+in ssh
+
+for images
+
+docker build -t my-python-app:1.0 . 
+
+then check docker images
+
+for container
+
+docker run -d --name my-container -p 5000:5000 my-python-app:1.0
+
+--name gives your container a name.
+
+-p host_port:container_port maps ports from host to container.
+
+-d runs the container in the background.
