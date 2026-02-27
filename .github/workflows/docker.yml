@@ -28,6 +28,6 @@ jobs:
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/fullstack-app || mkdir -p ~/fullstack-app && cd ~/fullstack-app
             git pull origin main || git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git .
-            docker-compose pull
-            docker-compose up -d --build
+            docker compose pull
+            docker compose up -d --build
           EOF
