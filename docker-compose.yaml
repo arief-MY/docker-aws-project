@@ -12,9 +12,9 @@ services:
   frontend:
     build: ./frontend
     expose:
-      - "3000"
+      - "80"
 
   backend:
     build: ./backend
     expose:
-      - "5000"
+      - "3000"
