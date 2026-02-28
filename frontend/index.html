@@ -5,6 +5,18 @@
   </head>
   <body>
     <h1>Hello from Frontend!</h1>
-    <p>This calls backend at <code>/api</code></p>
+    <p>Backend response:</p>
+    <div id="result">Loading...</div>
+
+    <script>
+      fetch('/api')
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById('result').innerText = data;
+        })
+        .catch(err => {
+          document.getElementById('result').innerText = "Error calling backend";
+        });
+    </script>
   </body>
 </html>
