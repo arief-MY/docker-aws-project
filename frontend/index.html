@@ -1,22 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Fullstack Test</title>
-  </head>
-  <body>
-    <h1>Hello from Frontend!</h1>
-    <p>Backend response:</p>
-    <div id="result">Loading...</div>
+<head>
+  <title>Fullstack CI/CD Demo</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 50px;
+      background: #f4f6f8;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
 
-    <script>
-      fetch('/api')
-        .then(res => res.text())
-        .then(data => {
-          document.getElementById('result').innerText = data;
-        })
-        .catch(err => {
-          document.getElementById('result').innerText = "Error calling backend";
-        });
-    </script>
-  </body>
+  <div class="card">
+    <h1>🚀 Fullstack CI/CD Pipeline</h1>
+    <p>Hosted on AWS EC2 with Docker + Nginx</p>
+    <button onclick="checkHealth()">Check Backend</button>
+    <pre id="output"></pre>
+  </div>
+
+  <script>
+    async function checkHealth() {
+      const res = await fetch("/api/health");
+      const data = await res.json();
+      document.getElementById("output").innerText =
+        JSON.stringify(data, null, 2);
+    }
+  </script>
+
+</body>
 </html>

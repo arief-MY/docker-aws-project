@@ -1,24 +1,15 @@
-const express = require('express');
-const mysql = require('mysql2');
-
+const express = require("express");
 const app = express();
-const port = 3000;
 
-const db = mysql.createConnection({
-  host: 'db',
-  user: 'root',
-  password: 'rootpassword',
-  database: 'myapp'
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "OK",
+    version: "1.0.0",
+    deployed_at: new Date(),
+    message: "CI/CD Pipeline Working 🚀"
+  });
 });
 
-db.connect(err => {
-  if (err) console.log('DB connection error', err);
-  else console.log('DB connected');
+app.listen(3000, () => {
+  console.log("Backend running on port 3000");
 });
-
-// THIS is important
-app.get('/api', (req, res) => {
-  res.send('Hello from Backend API!');
-});
-
-app.listen(port, () => console.log(`Backend running on port ${port}`));
