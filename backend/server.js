@@ -4,7 +4,6 @@ const mysql = require('mysql2');
 const app = express();
 const port = 3000;
 
-// MySQL connection
 const db = mysql.createConnection({
   host: 'db',
   user: 'root',
@@ -13,12 +12,13 @@ const db = mysql.createConnection({
 });
 
 db.connect(err => {
-  if(err) console.log('DB connection error', err);
+  if (err) console.log('DB connection error', err);
   else console.log('DB connected');
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello from Backend!');
+// THIS is important
+app.get('/api', (req, res) => {
+  res.send('Hello from Backend API!');
 });
 
 app.listen(port, () => console.log(`Backend running on port ${port}`));
